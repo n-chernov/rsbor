@@ -15,7 +15,29 @@ def errorMessage(err_file, addr, line, message):
     print msg
     err_file.write(msg + '\n')
 
-with open('input3_short.csv', 'r') as input_file:
+def checkLongitude(longitude):
+    western_limit = 29.0 # Чуть западнее Соснового Бора
+    eastern_limit = 31.1 # Чуть восточнее Шлиссельбурга
+    return (longitude > western_limit) and (longitude < eastern_limit)
+
+def checkLatitude(latitude):
+    northern_limit = 60.15 # Чуть севернее Сертолово
+    southern_limit = 59.5  # Чуть южнее Гатчины
+    return (latitude > southern_limit) and (latitude < northern_limit)
+
+def checkCoordString(str):
+    tokens = str.split(' ');
+    if len(tokens):
+        try:
+            longitude = float(tokens[0])
+            latitude  = float(tokens[1])
+        except:
+            return False;
+        return checkLongitude(longitude) and checkLatitude(latitude)
+    else:
+        return False
+
+with open('input3.csv', 'r') as input_file:
     next(input_file)  # skip first line
     line_number = 2
     for input_line in input_file:
@@ -28,18 +50,20 @@ with open('input3_short.csv', 'r') as input_file:
 
                 conn.request("GET", "/1.x/?format=json&results=1&geocode=" + address_encoded)
                 resp = conn.getresponse()
-                # print resp.status, resp.reason
                 if resp.status == 200:
                     json_resp = json.loads(resp.read())
                     try:
                         coord_str = json_resp[u'response'][u'GeoObjectCollection'][u'featureMember'][0][u'GeoObject'][u'Point'][u'pos']
-                        output_file.write(coord_str + ' ')
-                        output_file.write(action_point + '\n')
-                        print coord_str, action_point
+                        if (checkCoordString(coord_str)):
+                            output_file.write(coord_str + ' ')
+                            output_file.write(action_point + '\n')
+                            print coord_str, action_point
+                        else:
+                            errorMessage(errors_file, address, line_number, 'wrong coordinates - ' + coord_str)
                     except:
                         errorMessage(errors_file, address, line_number, 'something wrong with format of geocoder response')
                 else:
-                    errorMessage(errors_file, address, line_number, 'error occured during HTTP request')
+                    errorMessage(errors_file, address, line_number, 'error occured during HTTP request, code ' + str(resp.status))
             else:
                 errorMessage(errors_file, '?', line_number, 'address is empty')
         else:
