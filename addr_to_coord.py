@@ -2,7 +2,6 @@
 import httplib
 import urllib
 import json
-import time
 
 # https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Тверская+6.
 conn = httplib.HTTPSConnection("geocode-maps.yandex.ru")
@@ -26,13 +25,13 @@ def checkLatitude(latitude):
     return (latitude > southern_limit) and (latitude < northern_limit)
 
 def checkCoordString(str):
-    tokens = str.split(' ');
+    tokens = str.split(' ')
     if len(tokens):
         try:
             longitude = float(tokens[0])
             latitude  = float(tokens[1])
         except:
-            return False;
+            return False
         return checkLongitude(longitude) and checkLatitude(latitude)
     else:
         return False
@@ -43,11 +42,10 @@ with open('input3.csv', 'r') as input_file:
     for input_line in input_file:
         cells = input_line.split(';')
         if len(cells) > 1:
-            action_point = cells[0].translate(None, ' \n\t\r')
-            address = cells[1].translate(None, ' \n\t\r')
+            action_point = cells[0].strip(' \n\t\r')
+            address = cells[1].strip(' \n\t\r')
             if len(address) > 0:
                 address_encoded = urllib.quote(address)
-
                 conn.request("GET", "/1.x/?format=json&results=1&geocode=" + address_encoded)
                 resp = conn.getresponse()
                 if resp.status == 200:
@@ -62,6 +60,8 @@ with open('input3.csv', 'r') as input_file:
                             errorMessage(errors_file, address, line_number, 'wrong coordinates - ' + coord_str)
                     except:
                         errorMessage(errors_file, address, line_number, 'something wrong with format of geocoder response')
+                        json.dump(json_resp, errors_file)
+                        errors_file.write('\n')
                 else:
                     errorMessage(errors_file, address, line_number, 'error occured during HTTP request, code ' + str(resp.status))
             else:
