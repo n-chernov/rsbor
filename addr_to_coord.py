@@ -6,7 +6,7 @@ import json
 # https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Тверская+6.
 conn = httplib.HTTPSConnection("geocode-maps.yandex.ru")
 
-output_file = open('output.csv', 'w')
+output_file = open('output.txt', 'w')
 errors_file = open('errors.log', 'w')
 
 def errorMessage(err_file, addr, line, message):
