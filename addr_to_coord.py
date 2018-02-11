@@ -53,7 +53,7 @@ with open('input3.csv', 'r') as input_file:
                     try:
                         coord_str = json_resp[u'response'][u'GeoObjectCollection'][u'featureMember'][0][u'GeoObject'][u'Point'][u'pos']
                         if (checkCoordString(coord_str)):
-                            output_file.write(coord_str + ' ')
+                            output_file.write(coord_str + ';')
                             output_file.write(action_point + '\n')
                             print coord_str, action_point
                         else:

@@ -7,15 +7,23 @@ yandex_json = {'type': 'FeatureCollection', 'features': []}
 
 with open('output.txt', 'r') as input_file:
     index = 0
+    action_points = set()
     for line in input_file:
-        tokens = line.split(' ')
+        tokens = line.split(';')
+        action_point = tokens[1]
+        coord_str = tokens[0]
+        action_points.add(action_point)
+
+        tokens = coord_str.split(' ')
         longitude = float(tokens[0])
         latitude  = float(tokens[1])
         json_entry = {'type':'Feature',
                       'id':index,
                       'geometry':
                           {'type':'Point',
-                           'coordinates':[latitude, longitude]}}
+                           'coordinates':[latitude, longitude]},
+                      'properties': {'hintContent': action_point},
+                      'options': {'iconColor': '#ff0000'}}
         yandex_json['features'].append(json_entry)
         index += 1
 
