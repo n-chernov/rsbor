@@ -17,8 +17,8 @@ function init () {
 
     // Чтобы задать опции одиночным объектам и кластерам,
     // обратимся к дочерним коллекциям ObjectManager.
-    //objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-    //objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+    objectManager.objects.options.set({'preset': 'islands#greenDotIcon', 'hasBalloon':false});
+    objectManager.clusters.options.set({'preset': 'islands#greenClusterIcons', 'hasBalloon':false});
     myMap.geoObjects.add(objectManager);
 
     $.ajax({

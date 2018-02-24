@@ -36,7 +36,7 @@ def checkCoordString(str):
     else:
         return False
 
-with open('input3.csv', 'r') as input_file:
+with open('input4.csv', 'r') as input_file:
     next(input_file)  # skip first line
     line_number = 2
     for input_line in input_file:

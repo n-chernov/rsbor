@@ -21,9 +21,7 @@ with open('output.txt', 'r') as input_file:
                       'id':index,
                       'geometry':
                           {'type':'Point',
-                           'coordinates':[latitude, longitude]},
-                      'properties': {'hintContent': action_point},
-                      'options': {'iconColor': '#ff0000'}}
+                           'coordinates':[latitude, longitude]}}
         yandex_json['features'].append(json_entry)
         index += 1
 
